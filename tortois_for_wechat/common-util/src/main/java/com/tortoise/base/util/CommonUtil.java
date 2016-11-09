@@ -33,11 +33,11 @@ public class CommonUtil {
 
     public static ThreadPoolExecutor threadPool;
 
-    // spring上下文在quartz上下文中保存时使用的键
+    // spring application context str
     public static final String 							APPLICATION_CONTEXT_STR = "applicationContext";
 
 
-    // 日志记录器
+    // logger
     private static Logger log = Logger.getLogger(CommonUtil.class);
 
     static {
@@ -45,9 +45,9 @@ public class CommonUtil {
     }
 
     /**
-     * 生成UUID字符串
+     * get UUID string
      *
-     * @return UUID字符串
+     * @return UUID string
      */
     public static String getUUID(){
         UUID uuid = UUID.randomUUID();
@@ -55,43 +55,36 @@ public class CommonUtil {
     }
 
     /**
-     * 获取其他配置信息
+     * get other configure values
      *
-     * @param configKey 要获取的配置数据的键
-     * @return 要获取的配置数据的值
+     * @param configKey config key
+     * @return value of configure
      */
     public static String getConfigValue(String configKey){
         return rsb.getString(configKey);
     }
 
     /**
-     * 将源字符串加上单引号，如果源字符串是以逗号分隔，则将每个逗号内部的字符串都加上单引号,<br/>
-     * 并且会去掉每个字符串左右的空格, 如果两个逗号之间的字符串为空，则该字符串将被抛弃, 该方法<br/>
-     * 用于删除多条记录时，给ID字符串中的每个ID添加单引号
+     * getSingleQuotesStr
      *
-     * @param origin 源字符串
+     * @param origin origin
      *
-     * @return 带单引号的字符串
+     * @return single with quote string
      */
     public static String getSingleQuotesStr(String origin){
-        // 返回结果
         String results = "";
 
         if(origin == null || origin.trim().length() == 0){
             return "";
         }
 
-        // 没有逗号分隔的单个字符串，直接在左右添加单引号后返回结果
         if(origin.indexOf(",") < 0){
             return "'" + origin.trim() + "'";
         }
 
-        // 有逗号分隔的多个字符串，先根据逗号分隔，得到对应的数组
         String[] temp = origin.split(",");
 
-        // 循环该数组，得到其中的每一个字符串，并且添加单引号
         for(int i = 0; temp != null && i < temp.length; i++){
-            // 中间的字符串为null或者为空，将被抛弃
             if(temp[i] == null || temp[i].trim().length() == 0){
                 continue;
             }
@@ -100,7 +93,6 @@ public class CommonUtil {
                 results += ",";
             }
 
-            // 添加单引号
             results += "'" + temp[i].trim() + "'";;
         }
 
@@ -108,11 +100,10 @@ public class CommonUtil {
     }
 
     /**
-     * 获取本项目根目录的绝对路径
+     * getWebRootPath
      *
-     * @return 根目录的绝对路径
+     * @return root path
      *
-     * 2012-10-15
      */
     public static String getWebRootPath(){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -122,12 +113,11 @@ public class CommonUtil {
     }
 
     /**
-     * 获取本项目下某个指定文件夹的绝对路径
+     * getWebDirPath
      *
-     * @param path 文件夹名称
-     * @return 该文件夹对应的绝对路径
+     * @param path file path
+     * @return WebDirPath
      *
-     * 2012-10-15
      */
     public static String getWebDirPath(String path){
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
@@ -137,7 +127,7 @@ public class CommonUtil {
     }
 
     /**
-     * 根据参数长度，产生数字验证码
+     * create int code
      * @param length
      * @return
      */
@@ -152,11 +142,11 @@ public class CommonUtil {
     }
 
     /**
-     * 生成Size大小的随机数据
+     * create code by size
      *
-     * @param size 大小
+     * @param size
      *
-     * @return 随机字符串
+     * @return random string
      */
     public static String getCode(int size){
         String str="abcdefghigklmnopkrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ0123456789";
@@ -169,24 +159,24 @@ public class CommonUtil {
     }
 
     /**
-     * 将文件流加密后写入到目标文件中
+     * the file stream is encrypted and written to the destination file
      *
-     * @param in 文件流
-     * @param file 目标文件
-     * @param key 密码, 默认为123456
+     * @param in InputStream
+     * @param file file
+     * @param key key, default 123456
      */
     public static void fileEncrypt(InputStream in, File file, String key){
-        log.debug("[fileEncrypt] --- 开始 --- 将文件流加密后写入到目标文件中");
+        log.debug("[fileEncrypt] --- start --- the file stream is encrypted and written to the destination file");
         if(in == null){
-            log.debug("[fileEncrypt] 文件输入流in为null");
+            log.debug("[fileEncrypt] InputStream in is null");
             return;
         }
         if(file == null){
-            log.debug("[fileEncrypt] 目标文件file为null");
+            log.debug("[fileEncrypt] file file  is null");
             return;
         }
         if(key == null || key.trim().length() == 0){
-            log.debug("[fileEncrypt] 密码为空, 设为默认密码: 123456");
+            log.debug("[fileEncrypt] password is null , set  default : 123456");
             key = "123456";
         }
 
@@ -206,7 +196,7 @@ public class CommonUtil {
             }
         }catch(Exception e) {
             e.printStackTrace();
-            log.error("[fileEncrypt] 将文件流加密后写入到目标文件中时出现异常, 异常信息: " + e.toString());
+            log.error("[fileEncrypt] exception to writte the destination,exception msg: " + e.toString());
         }finally{
             try {
                 if(cis != null) cis.close();
@@ -214,15 +204,15 @@ public class CommonUtil {
                 if(out != null) out.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                log.error("[fileEncrypt] 关闭文件流时出现异常, 异常信息: " + e.toString());
+                log.error("[fileEncrypt] exception to colse, exception msg: " + e.toString());
             }
         }
 
-        log.debug("[fileEncrypt] --- 结束 --- 将文件流加密后写入到目标文件中");
+        log.debug("[fileEncrypt] --- finish --- ");
     }
 
     /**
-     * 根据参数生成KEY
+     * create key
      */
     private static SecretKey getKey(String strKey) {
         try {
@@ -235,7 +225,7 @@ public class CommonUtil {
     }
 
     /**
-     * 判断字符串是否为数字
+     * judge null number
      * @param str
      * @return
      */
@@ -255,7 +245,7 @@ public class CommonUtil {
      * @throws ScriptException
      * @Title: formulaComputer
      * @author youzm  
-     * @Description: 公式计算
+     * @Description:
      * @param formula
      * @return Object
      * @throws
@@ -265,7 +255,7 @@ public class CommonUtil {
         ScriptEngine engine = manager.getEngineByName("js");
         Object result = engine.eval(formula);
 
-        System.out.println("结果类型：" + result.getClass().getName() + ",计算结果:" + result);
+        System.out.println("result type：" + result.getClass().getName() + ",compute type:" + result);
         return result;
     }
 
