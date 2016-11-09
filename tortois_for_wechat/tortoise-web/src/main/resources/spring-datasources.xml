@@ -10,13 +10,13 @@
 				http://www.springframework.org/schema/context
 				http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <context:property-placeholder location="classpath:xx.properties" ignore-unresolvable="true"/>
+    <context:property-placeholder location="classpath:tortoise.properties" ignore-unresolvable="true"/>
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value=""/>
-        <property name="url" value=""/>
-        <property name="username" value=""/>
-        <property name="password" value=""/>
+        <property name="driverClassName" value="driverClassName"/>
+        <property name="url" value="url"/>
+        <property name="username" value="username"/>
+        <property name="password" value="password"/>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
